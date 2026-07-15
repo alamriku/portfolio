@@ -312,21 +312,31 @@ h2.section-title {
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
 }
-.proof-layout {
+.testimonials {
   display: grid;
-  grid-template-columns: 1.4fr 0.9fr;
-  gap: 24px;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 20px;
   align-items: start;
 }
-@media (max-width: 820px) { .proof-layout { grid-template-columns: 1fr; } }
-.testimonials {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+@media (max-width: 820px) { .testimonials { grid-template-columns: 1fr; } }
+
+.receipts-label {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text-faint);
+  margin: 48px 0 18px;
+  letter-spacing: 0.02em;
 }
+.receipts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  align-items: flex-start;
+}
+@media (max-width: 620px) { .receipts { justify-content: center; } }
 
 /* real screenshot receipt */
-.receipt { margin: 0; }
+.receipt { margin: 0; max-width: 300px; flex: 0 1 300px; }
 .receipt-frame {
   border: 1px solid var(--border-bright);
   border-radius: 14px;
