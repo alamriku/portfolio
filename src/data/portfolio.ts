@@ -18,6 +18,16 @@ export interface Testimonial {
   kind: 'review' | 'recognition';
 }
 
+export interface Article {
+  title: string;
+  url: string;
+  blurb: string;
+  date: string;
+  readMins: number;
+  tags: string[];
+  featured?: boolean;
+}
+
 export interface Experience {
   company: string;
   role: string;
@@ -171,6 +181,66 @@ export const testimonials: Testimonial[] = [
     author: 'Azizul Haque',
     role: 'Team shout-out · WPPOOL',
     kind: 'recognition',
+  },
+];
+
+export const writing = {
+  intro:
+    'I write to think — digging into the parts of PHP, Laravel, and the web that usually stay hidden. Some in English, some in Bangla for developers back home.',
+  profileUrl: 'https://dev.to/alamriku',
+};
+
+export const articles: Article[] = [
+  {
+    title: 'Async PHP বুঝতে গিয়ে যা শিখলাম — Fibers, epoll, আর PHP 8.6',
+    url: 'https://dev.to/alamriku/sync-php-developer-hisebe-async-php-bujhte-giye-yaa-shikhlaam-fibers-epoll-aar-php-86-462j',
+    blurb:
+      'A sync-first PHP developer\'s dive into async: Fibers, the epoll event loop, and what PHP 8.6 changes. Written in Bangla for developers learning past the request-response model.',
+    date: 'Jul 2025',
+    readMins: 4,
+    tags: ['php', 'async', 'fibers'],
+    featured: true,
+  },
+  {
+    title: 'Comprehensive Software Engineering Technical Interview Guide',
+    url: 'https://dev.to/alamriku/comprehensive-software-engineering-technical-interview-guide-3l38',
+    blurb:
+      'A long-form resource covering core software engineering concepts — from inheritance vs. composition to system design — built for interview prep.',
+    date: 'May 2025',
+    readMins: 45,
+    tags: ['career', 'interview'],
+  },
+  {
+    title: 'Laravel Guards: A Comprehensive Guide',
+    url: 'https://dev.to/alamriku/laravel-guards-a-comprehensive-guide-2fdo',
+    blurb: "A deep look at Laravel's authentication guards — how they work under the hood and when to reach for a custom one.",
+    date: 'May 2025',
+    readMins: 7,
+    tags: ['laravel', 'auth'],
+  },
+  {
+    title: 'How to Integrate PayPal Payment Gateway in Laravel',
+    url: 'https://dev.to/alamriku/how-to-integrate-paypal-payment-gateway-in-laravel-8-x-ba6',
+    blurb: 'A practical, step-by-step walkthrough of wiring PayPal payments into a Laravel app.',
+    date: 'Aug 2021',
+    readMins: 7,
+    tags: ['laravel', 'payments'],
+  },
+  {
+    title: 'Lazy Loading & Lazy Collections in Laravel',
+    url: 'https://dev.to/alamriku/lazy-loading-lazy-collection-in-laravel-5d2i',
+    blurb: "When and why to reach for lazy collections to keep memory flat over large Eloquent result sets.",
+    date: 'Aug 2021',
+    readMins: 2,
+    tags: ['laravel', 'performance'],
+  },
+  {
+    title: "Docker: RUN touch doesn't create the file",
+    url: 'https://dev.to/alamriku/docker-run-touch-doesnt-create-file-1fjd',
+    blurb: 'A short debugging note on a confusing Docker layer-caching gotcha.',
+    date: 'Jan 2024',
+    readMins: 2,
+    tags: ['docker'],
   },
 ];
 

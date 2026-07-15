@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { profile, projects, experience, proof, testimonials } from '../data/portfolio';
+import { profile, projects, experience, proof, testimonials, writing, articles } from '../data/portfolio';
 
 const featured = projects.filter((p) => p.featured);
 const others = projects.filter((p) => !p.featured);
@@ -15,6 +15,7 @@ const others = projects.filter((p) => !p.featured);
         <a href="#proof">proof</a>
         <a href="#about">about</a>
         <a href="#experience">experience</a>
+        <a href="#writing">writing</a>
         <a href="#contact">contact</a>
       </div>
     </div>
@@ -224,6 +225,40 @@ const others = projects.filter((p) => !p.featured);
             </div>
           ))}
         </div>
+      </div>
+    </section>
+
+    <!-- WRITING -->
+    <section id="writing">
+      <div class="wrap">
+        <div class="eyebrow">writing</div>
+        <h2 class="section-title">I write to think</h2>
+        <p class="section-sub">{writing.intro}</p>
+
+        <div class="articles">
+          {articles.map((a) => (
+            <a class={`article${a.featured ? ' featured' : ''}`} href={a.url} target="_blank" rel="noopener">
+              <div class="article-meta">
+                <span class="art-date">{a.date}</span>
+                <span class="art-sep">·</span>
+                <span class="art-read">{a.readMins} min read</span>
+                {a.featured && <span class="art-badge">Latest</span>}
+              </div>
+              <h3 class="article-title">{a.title}</h3>
+              <p class="article-blurb">{a.blurb}</p>
+              <div class="article-foot">
+                <div class="art-tags">
+                  {a.tags.map((t) => <span class="art-tag">#{t}</span>)}
+                </div>
+                <span class="art-arrow">Read on dev.to ↗</span>
+              </div>
+            </a>
+          ))}
+        </div>
+
+        <a class="btn btn-ghost writing-more" href={writing.profileUrl} target="_blank" rel="noopener">
+          All posts on dev.to →
+        </a>
       </div>
     </section>
 
