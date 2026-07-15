@@ -125,22 +125,41 @@ const others = projects.filter((p) => !p.featured);
         <h2 class="section-title">Merchants remember the support.</h2>
         <p class="section-sub">{proof.lead}</p>
 
-        <div class="testimonials">
-          {testimonials.map((t) => (
-            <figure class={`quote-card ${t.kind}`}>
-              <div class="q-mark">"</div>
-              {t.stars && (
-                <div class="stars" aria-label={`${t.stars} out of 5 stars`}>
-                  {Array.from({ length: t.stars }).map(() => <span>★</span>)}
-                </div>
-              )}
-              <blockquote>{t.quote}</blockquote>
-              <figcaption>
-                <span class="author">{t.author}</span>
-                <span class="q-role">{t.role}</span>
-              </figcaption>
-            </figure>
-          ))}
+        <div class="proof-layout">
+          <div class="testimonials">
+            {testimonials.map((t) => (
+              <figure class={`quote-card ${t.kind}`}>
+                <div class="q-mark">"</div>
+                {t.stars && (
+                  <div class="stars" aria-label={`${t.stars} out of 5 stars`}>
+                    {Array.from({ length: t.stars }).map(() => <span>★</span>)}
+                  </div>
+                )}
+                <blockquote>{t.quote}</blockquote>
+                <figcaption>
+                  <span class="author">{t.author}</span>
+                  <span class="q-role">{t.role}</span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+
+          <figure class="receipt">
+            <div class="receipt-frame">
+              <div class="receipt-bar">
+                <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+                <span class="receipt-title">flexsync · #support</span>
+              </div>
+              <img
+                src="/proof/flexsync-review-slack.png"
+                alt="Slack message: Azizul Haque thanks the team and Badrul Alam, with a screenshot of a 5-star FlexSync review on the Shopify App Store from lizfrydesign"
+                loading="lazy"
+                width="348"
+                height="482"
+              />
+            </div>
+            <figcaption>Real review + team reaction — straight from the Shopify App Store.</figcaption>
+          </figure>
         </div>
       </div>
     </section>
