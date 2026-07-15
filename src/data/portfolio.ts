@@ -10,6 +10,14 @@ export interface Project {
   link?: { label: string; url: string };
 }
 
+export interface Testimonial {
+  quote: string;
+  author: string;
+  role: string;
+  stars?: number;
+  kind: 'review' | 'recognition';
+}
+
 export interface Experience {
   company: string;
   role: string;
@@ -141,6 +149,28 @@ export const projects: Project[] = [
     highlights: ['Hides YouTube thumbnails for focus'],
     role: 'Pet project',
     year: '2023',
+  },
+];
+
+export const proof = {
+  lead:
+    "FlexSync serves 400+ merchants — but the feedback I'm proudest of isn't about the feature list. It's about showing up. When a merchant hit an edge case that wasn't even ours to fix, we stayed on it until it was solved. That's the reputation I want the work to carry.",
+};
+
+export const testimonials: Testimonial[] = [
+  {
+    quote:
+      "Super helpful app and passionate, supportive developers. They really spent time trying to solve an issue for me when they didn't have to! Thanks so much!",
+    author: 'lizfrydesign',
+    role: '5-star review · Shopify App Store',
+    stars: 5,
+    kind: 'review',
+  },
+  {
+    quote: 'Thanks Team for the support 🎉 Thanks @Badrul Alam vai',
+    author: 'Azizul Haque',
+    role: 'Team shout-out · WPPOOL',
+    kind: 'recognition',
   },
 ];
 

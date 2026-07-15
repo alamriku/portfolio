@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { profile, projects, experience } from '../data/portfolio';
+import { profile, projects, experience, proof, testimonials } from '../data/portfolio';
 
 const featured = projects.filter((p) => p.featured);
 const others = projects.filter((p) => !p.featured);
@@ -12,6 +12,7 @@ const others = projects.filter((p) => !p.featured);
       <a href="#top" class="logo">kazi<span class="dot">.</span>badrul</a>
       <div class="nav-links">
         <a href="#work">work</a>
+        <a href="#proof">proof</a>
         <a href="#about">about</a>
         <a href="#experience">experience</a>
         <a href="#contact">contact</a>
@@ -112,6 +113,33 @@ const others = projects.filter((p) => !p.featured);
                 {p.stack.map((s) => <span class="tag">{s}</span>)}
               </div>
             </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- PROOF -->
+    <section id="proof" class="proof">
+      <div class="wrap">
+        <div class="eyebrow">the part that matters</div>
+        <h2 class="section-title">Merchants remember the support.</h2>
+        <p class="section-sub">{proof.lead}</p>
+
+        <div class="testimonials">
+          {testimonials.map((t) => (
+            <figure class={`quote-card ${t.kind}`}>
+              <div class="q-mark">"</div>
+              {t.stars && (
+                <div class="stars" aria-label={`${t.stars} out of 5 stars`}>
+                  {Array.from({ length: t.stars }).map(() => <span>★</span>)}
+                </div>
+              )}
+              <blockquote>{t.quote}</blockquote>
+              <figcaption>
+                <span class="author">{t.author}</span>
+                <span class="q-role">{t.role}</span>
+              </figcaption>
+            </figure>
           ))}
         </div>
       </div>

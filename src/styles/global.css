@@ -304,6 +304,67 @@ h2.section-title {
 }
 .card-link:hover { text-decoration: underline; }
 
+/* ---------- Proof / Testimonials ---------- */
+.proof {
+  background:
+    radial-gradient(50rem 30rem at 100% 0%, rgba(94, 234, 212, 0.06), transparent 60%),
+    var(--bg-soft);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.testimonials {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+@media (max-width: 820px) { .testimonials { grid-template-columns: 1fr; } }
+.quote-card {
+  position: relative;
+  margin: 0;
+  padding: 34px 30px 28px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--panel);
+  overflow: hidden;
+}
+.quote-card::after {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--grad);
+}
+.quote-card .q-mark {
+  position: absolute;
+  top: 8px; right: 22px;
+  font-family: Georgia, serif;
+  font-size: 90px;
+  line-height: 1;
+  color: var(--border-bright);
+  opacity: 0.5;
+  pointer-events: none;
+}
+.quote-card .stars {
+  color: #fbbf24;
+  font-size: 15px;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+}
+.quote-card blockquote {
+  margin: 0 0 20px;
+  font-size: 18px;
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  position: relative;
+  z-index: 1;
+}
+.quote-card.recognition blockquote { font-size: 16px; color: var(--text-dim); }
+.quote-card figcaption { display: flex; flex-direction: column; gap: 2px; }
+.quote-card .author { font-weight: 600; font-size: 15px; }
+.quote-card .q-role { font-family: var(--mono); font-size: 12px; color: var(--text-faint); }
+
 /* ---------- Experience ---------- */
 .timeline { position: relative; margin-left: 8px; }
 .tl-item {
