@@ -1,0 +1,192 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { profile, projects, experience } from '../data/portfolio';
+
+const featured = projects.filter((p) => p.featured);
+const others = projects.filter((p) => !p.featured);
+---
+
+<Layout>
+  <nav class="nav">
+    <div class="wrap">
+      <a href="#top" class="logo">kazi<span class="dot">.</span>badrul</a>
+      <div class="nav-links">
+        <a href="#work">work</a>
+        <a href="#about">about</a>
+        <a href="#experience">experience</a>
+        <a href="#contact">contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="top">
+    <!-- HERO -->
+    <header class="hero">
+      <div class="wrap">
+        <div class="status">
+          <span class="pulse"></span> Available for interesting problems
+        </div>
+        <h1>
+          I build the <span class="gradient-text">seams</span><br />
+          between platforms.
+        </h1>
+        <p class="lede">
+          {profile.title} in {profile.location}, {profile.years} years in.
+          <strong>{profile.tagline}</strong>
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#work">View work →</a>
+          <a class="btn btn-ghost" href={`mailto:${profile.email}`}>Get in touch</a>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat">
+            <div class="num gradient-text">400+</div>
+            <div class="label">merchants on FlexSync</div>
+          </div>
+          <div class="stat">
+            <div class="num gradient-text">3.4M</div>
+            <div class="label">API requests handled</div>
+          </div>
+          <div class="stat">
+            <div class="num gradient-text">60%</div>
+            <div class="label">sync latency cut</div>
+          </div>
+          <div class="stat">
+            <div class="num gradient-text">{profile.years}</div>
+            <div class="label">years shipping</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- WORK -->
+    <section id="work">
+      <div class="wrap">
+        <div class="eyebrow">selected work</div>
+        <h2 class="section-title">Things I've shipped</h2>
+        <p class="section-sub">
+          Production systems across e-commerce, sync tooling, and browser extensions —
+          most serving real merchants at scale.
+        </p>
+
+        <div class="projects-grid featured-grid">
+          {featured.map((p, i) => (
+            <article class={`card${i === 0 ? ' big' : ''}`}>
+              <div class="card-head">
+                <h3>{p.name}</h3>
+                <span class="year">{p.year}</span>
+              </div>
+              <p class="tagline">{p.tagline}</p>
+              <div class="role">{p.role}</div>
+              <p class="desc">{p.description}</p>
+              <ul class="highlights">
+                {p.highlights.map((h) => <li>{h}</li>)}
+              </ul>
+              <div class="card-stack">
+                {p.stack.map((s) => <span class="tag">{s}</span>)}
+              </div>
+              {p.link && (
+                <a class="card-link" href={p.link.url} target="_blank" rel="noopener">
+                  {p.link.label} ↗
+                </a>
+              )}
+            </article>
+          ))}
+        </div>
+
+        <div class="projects-grid featured-grid" style="margin-top:20px;">
+          {others.map((p) => (
+            <article class="card">
+              <div class="card-head">
+                <h3>{p.name}</h3>
+                <span class="year">{p.year}</span>
+              </div>
+              <p class="tagline">{p.tagline}</p>
+              <div class="role">{p.role}</div>
+              <p class="desc">{p.description}</p>
+              <ul class="highlights">
+                {p.highlights.map((h) => <li>{h}</li>)}
+              </ul>
+              <div class="card-stack">
+                {p.stack.map((s) => <span class="tag">{s}</span>)}
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="wrap">
+        <div class="eyebrow">about</div>
+        <h2 class="section-title">Self-taught, build-first</h2>
+        <div class="about-grid">
+          <div>
+            {profile.about.map((para) => <p>{para}</p>)}
+          </div>
+          <div class="skills-block">
+            {Object.entries(profile.skills).map(([group, items]) => (
+              <div class="skill-group">
+                <div class="skill-head">{group}</div>
+                <div class="chips">
+                  {items.map((it) => <span class="chip">{it}</span>)}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience">
+      <div class="wrap">
+        <div class="eyebrow">career</div>
+        <h2 class="section-title">Where I've worked</h2>
+        <div class="timeline">
+          {experience.map((e) => (
+            <div class="tl-item">
+              <div class="tl-head">
+                <span><span class="co">{e.company}</span> <span class="role">· {e.role}</span></span>
+                <span class="period">{e.period}</span>
+              </div>
+              <div class="tl-loc">{e.location}</div>
+              <ul>
+                {e.points.map((pt) => <li>{pt}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="contact">
+      <div class="wrap">
+        <div class="eyebrow" style="justify-content:center;">get in touch</div>
+        <h2>Let's build something.</h2>
+        <p>
+          Open to freelance, full-time, and interesting collaborations.
+          Fastest way to reach me is email.
+        </p>
+        <div class="socials">
+          <a class="social" href={`mailto:${profile.email}`}>✉ {profile.email}</a>
+          {profile.socials.map((s) => (
+            <a class="social" href={s.url} target="_blank" rel="noopener">
+              {s.label} <span class="h">@{s.handle}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© 2026 {profile.name}</span>
+      <span>Built with Astro · deployed on Cloudflare Pages</span>
+    </div>
+  </footer>
+</Layout>
