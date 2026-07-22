@@ -1,0 +1,392 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { profile } from '../data/portfolio';
+
+const title = 'FlexSync — Bidirectional Shopify ↔ Google Sheets sync · Kazi Badrul';
+const description =
+  'Case study: a solo-built public Shopify app that keeps a merchant\'s catalog in two-way sync with Google Sheets — 400+ merchants, 4M+ requests a month, built on a serialized bulk-operation queue and buffered webhook processing.';
+
+const stat = [
+  { num: '4M+', label: 'requests / month' },
+  { num: '400+', label: 'merchants in production' },
+  { num: '60%', label: 'sync latency cut' },
+  { num: '1', label: 'engineer — solo-built' },
+];
+
+const stack = [
+  'Laravel 12', 'React 18', 'TypeScript', 'MySQL', 'Redis',
+  'Shopify GraphQL Admin API', 'Bulk Operations API', 'Google Sheets API', 'Apps Script',
+];
+---
+
+<Layout title={title} description={description}>
+  <nav class="nav">
+    <div class="wrap">
+      <a href="/" class="logo">kazi<span class="dot">.</span>badrul</a>
+      <div class="nav-links">
+        <a href="/#work">← all work</a>
+        <a href="/#contact">contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="cs">
+    <!-- HERO -->
+    <header class="cs-hero">
+      <div class="wrap">
+        <a class="back" href="/#work">← Back to work</a>
+        <div class="eyebrow">case study · Shopify public app</div>
+        <h1>FlexSync</h1>
+        <p class="cs-lede">
+          A public Shopify app that keeps a merchant's product catalog in
+          <strong>continuous two-way sync with Google Sheets</strong> — export products,
+          variants, and inventory into a spreadsheet, bulk-edit them where merchants already
+          work, and push every change back to Shopify without the two systems ever drifting apart.
+        </p>
+
+        <div class="cs-meta">
+          <div><span class="k">Role</span><span class="v">Sole engineer · WPPOOL</span></div>
+          <div><span class="k">Timeline</span><span class="v">2023 — present</span></div>
+          <div><span class="k">Surface</span><span class="v">Published on the Shopify App Store</span></div>
+          <div><span class="k">Ownership</span><span class="v">Architecture → backend → frontend → ship</span></div>
+        </div>
+
+        <div class="cs-stats">
+          {stat.map((s) => (
+            <div class="cs-stat">
+              <div class="num gradient-text">{s.num}</div>
+              <div class="label">{s.label}</div>
+            </div>
+          ))}
+        </div>
+
+        <div class="cs-tags">
+          {stack.map((s) => <span class="tag">{s}</span>)}
+        </div>
+      </div>
+    </header>
+
+    <div class="wrap cs-body">
+      <!-- PROBLEM -->
+      <section class="cs-section">
+        <div class="eyebrow">the problem</div>
+        <h2>Merchants live in spreadsheets. Shopify doesn't.</h2>
+        <p>
+          Store operators run their catalog in Google Sheets — pricing rules, supplier
+          stock feeds, seasonal bulk edits, VLOOKUPs against a wholesale list. But Shopify's
+          admin is a one-record-at-a-time UI, and its CSV import/export is a lossy,
+          fire-and-forget round trip: you export, edit offline, re-import, and pray nothing
+          collided while you were away.
+        </p>
+        <p>
+          There was no dependable <em>live</em> bridge. Merchants wanted the spreadsheet to be a
+          real working surface — edit a price in a cell and have Shopify reflect it; sell a unit on
+          Shopify and have the sheet reflect it — with neither side silently overwriting the other.
+          That's a distributed two-way sync problem hiding behind a friendly &ldquo;just a spreadsheet&rdquo; UX,
+          and the hard parts are all the ones a merchant never sees.
+        </p>
+      </section>
+
+      <!-- WHAT I BUILT -->
+      <section class="cs-section">
+        <div class="eyebrow">what i built</div>
+        <h2>One app, two directions, no drift.</h2>
+        <p>
+          FlexSync is a Laravel + React public app that installs on a store, connects a Google
+          Sheet, and then keeps the two in agreement continuously. A merchant works entirely in
+          the spreadsheet they already know; FlexSync owns the messy middle — rate limits, async
+          bulk jobs, webhook fan-in, conflict resolution, and echo suppression so an update never
+          bounces back and forth forever.
+        </p>
+        <ul class="cs-list">
+          <li><strong>Shopify → Sheets.</strong> Full-catalog export of products, variants, inventory, and metafields into a structured sheet, then incremental updates as the store changes.</li>
+          <li><strong>Sheets → Shopify.</strong> Edits in the spreadsheet — including live spreadsheet formulas for price and stock — resolve to values and push back to Shopify.</li>
+          <li><strong>Formula sync.</strong> A merchant can write <span class="mono">=cost*1.4</span> in a price cell; FlexSync evaluates it and writes the result to Shopify, so pricing logic lives where the merchant already keeps it.</li>
+          <li><strong>Passive by default.</strong> Once connected, it just stays correct — no manual re-import, no &ldquo;click to sync&rdquo; ritual.</li>
+        </ul>
+      </section>
+
+      <!-- ARCHITECTURE -->
+      <section class="cs-section">
+        <div class="eyebrow">how it works</div>
+        <h2>The engineering under the spreadsheet.</h2>
+
+        <div class="cs-block">
+          <h3>A serialized bulk-operation queue</h3>
+          <p>
+            Shopify's Admin API is cost-based and aggressively rate-limited, and bulk reads/writes
+            run as <em>asynchronous</em> jobs you poll for completion. A naive &ldquo;fire a mutation per
+            row&rdquo; design dies instantly at catalog scale. FlexSync routes every write through a
+            serialized, per-shop queue on Laravel + Redis: work is batched into Bulk Operations,
+            only one bulk job per store is ever in flight, and the queue backs off and resumes
+            around Shopify's throttle instead of hammering into it.
+          </p>
+        </div>
+
+        <div class="cs-block">
+          <h3>Buffered, webhook-driven updates — 60% less latency</h3>
+          <p>
+            Store-side changes arrive as webhooks. Rather than process each one synchronously,
+            FlexSync buffers bursts and coalesces them: ten edits to the same product in a few
+            seconds collapse into one downstream sync instead of ten. That buffering is where the
+            <strong>60% sync-latency reduction</strong> came from — less redundant work on the hot path,
+            fewer API calls spent, and a system that stays responsive during bulk store activity.
+          </p>
+        </div>
+
+        <div class="cs-block">
+          <h3>Drift and echo prevention</h3>
+          <p>
+            The core hazard in any two-way sync is the feedback loop: FlexSync writes to Shopify,
+            Shopify fires a webhook, FlexSync reads it as a &ldquo;new&rdquo; change and writes it back — forever.
+            I solved that with change-origin tracking and version stamping so the engine recognizes
+            its own echoes and drops them, and applies a deterministic resolution rule when both sides
+            move at once. The two systems converge instead of oscillating.
+          </p>
+        </div>
+
+        <div class="cs-block">
+          <h3>Scaling to 4M+ requests a month</h3>
+          <p>
+            At 400+ live stores, webhook plus user traffic crossed several million requests a month.
+            The scaling work was unglamorous and effective: MySQL index optimization on the hot sync
+            and lookup paths, keeping the queue serialized per shop so no single store could starve
+            the rest, and pushing everything that didn't need to be synchronous off the request path.
+            It holds that volume on modest infrastructure.
+          </p>
+        </div>
+      </section>
+
+      <!-- RESULTS -->
+      <section class="cs-section">
+        <div class="eyebrow">results</div>
+        <h2>What shipped, and what it moved.</h2>
+        <ul class="cs-list">
+          <li><strong>400+ merchants</strong> running it in production against their live catalogs.</li>
+          <li><strong>4M+ requests a month</strong> handled — webhooks and user traffic — on a serialized queue.</li>
+          <li><strong>60% lower sync latency</strong> after moving to buffered, coalesced webhook processing.</li>
+          <li><strong>Formula sync</strong> shipped — a feature merchants specifically asked for, because it let their pricing logic stay in the sheet.</li>
+          <li><strong>5★ App Store reviews</strong> that call out the support as much as the product.</li>
+        </ul>
+
+        <figure class="cs-quote">
+          <blockquote>
+            &ldquo;Super helpful app and passionate, supportive developers. They really spent time trying
+            to solve an issue for me when they didn't have to! Thanks so much!&rdquo;
+          </blockquote>
+          <figcaption>lizfrydesign · 5★ review, Shopify App Store</figcaption>
+        </figure>
+      </section>
+
+      <!-- WHAT IT DEMONSTRATES -->
+      <section class="cs-section">
+        <div class="eyebrow">the takeaway</div>
+        <h2>Why this project is the one I lead with.</h2>
+        <p>
+          FlexSync is a distributed-systems problem — idempotency, rate limits, async job
+          orchestration, conflict resolution, convergence — wearing a spreadsheet's clothes. I
+          owned all of it: the architecture, the Laravel backend, the React frontend, the Shopify
+          and Google integrations, and the operational reality of keeping 400+ stores correct
+          every day. Solo, in production, on a narrow stack, under real constraints.
+        </p>
+        <p>
+          That's the signal I care about: not a feature list, but ownership and shipping under
+          constraint — the same thing I'd bring to an early team.
+        </p>
+      </section>
+
+      <!-- CTA -->
+      <section class="cs-cta">
+        <h2>Want the deeper walkthrough?</h2>
+        <p>Happy to whiteboard the queue design, the webhook buffering, or the drift-prevention model.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href={`mailto:${profile.email}`}>Get in touch</a>
+          <a class="btn btn-ghost" href="/#work">← Back to work</a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© 2026 {profile.name}</span>
+      <span>Built with Astro · deployed on Cloudflare Pages</span>
+    </div>
+  </footer>
+</Layout>
+
+<style>
+  .cs-hero {
+    padding: 72px 0 48px;
+    border-bottom: 1px solid var(--border);
+    background:
+      radial-gradient(50rem 30rem at 90% -10%, rgba(129, 140, 248, 0.10), transparent 60%),
+      radial-gradient(40rem 30rem at 0% 0%, rgba(94, 234, 212, 0.06), transparent 55%);
+  }
+  .back {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text-dim);
+    display: inline-block;
+    margin-bottom: 24px;
+    transition: color 0.15s;
+  }
+  .back:hover { color: var(--accent); }
+  .cs-hero h1 {
+    font-size: clamp(44px, 9vw, 84px);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin: 0 0 22px;
+  }
+  .cs-lede {
+    font-size: clamp(17px, 2.3vw, 21px);
+    color: var(--text-dim);
+    max-width: 720px;
+    margin: 0 0 40px;
+    line-height: 1.55;
+  }
+  .cs-lede strong { color: var(--text); font-weight: 600; }
+
+  .cs-meta {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 40px;
+    max-width: 720px;
+    padding: 24px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 36px;
+  }
+  @media (max-width: 620px) { .cs-meta { grid-template-columns: 1fr; } }
+  .cs-meta div { display: flex; flex-direction: column; gap: 4px; }
+  .cs-meta .k {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-faint);
+  }
+  .cs-meta .v { font-size: 14.5px; color: var(--text); }
+
+  .cs-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    margin-bottom: 32px;
+  }
+  .cs-stat .num {
+    font-family: var(--mono);
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+  .cs-stat .label { font-size: 12.5px; color: var(--text-faint); font-family: var(--mono); }
+
+  .cs-tags { display: flex; flex-wrap: wrap; gap: 7px; }
+
+  .cs-body { padding-bottom: 40px; }
+  .cs-section { padding: 64px 0; border-bottom: 1px solid var(--border); }
+  .cs-section:last-of-type { border-bottom: none; }
+  .cs-section h2 {
+    font-size: clamp(24px, 3.6vw, 34px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin: 0 0 22px;
+    max-width: 760px;
+  }
+  .cs-section > p {
+    color: var(--text-dim);
+    max-width: 760px;
+    margin: 0 0 18px;
+    font-size: 16px;
+  }
+  .cs-section em { color: var(--text); font-style: italic; }
+  .cs-section strong { color: var(--text); font-weight: 600; }
+
+  .cs-list {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0;
+    max-width: 760px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .cs-list li {
+    position: relative;
+    padding-left: 26px;
+    color: var(--text-dim);
+    font-size: 15.5px;
+    line-height: 1.55;
+  }
+  .cs-list li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--accent);
+  }
+  .cs-list .mono {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1px 7px;
+    font-size: 13.5px;
+    color: var(--accent);
+  }
+
+  .cs-block {
+    border-left: 2px solid var(--border-bright);
+    padding: 4px 0 4px 24px;
+    margin: 28px 0;
+    max-width: 780px;
+  }
+  .cs-block h3 {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 0 0 10px;
+    color: var(--text);
+  }
+  .cs-block p { color: var(--text-dim); margin: 0; font-size: 15.5px; line-height: 1.6; }
+
+  .cs-quote {
+    margin: 32px 0 0;
+    padding: 28px 30px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--panel);
+    position: relative;
+    max-width: 760px;
+    overflow: hidden;
+  }
+  .cs-quote::after {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--grad);
+  }
+  .cs-quote blockquote {
+    margin: 0 0 14px;
+    font-size: 18px;
+    line-height: 1.55;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  .cs-quote figcaption {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-faint);
+  }
+
+  .cs-cta { padding: 72px 0 24px; text-align: center; }
+  .cs-cta h2 {
+    font-size: clamp(26px, 4vw, 40px);
+    letter-spacing: -0.03em;
+    margin: 0 0 14px;
+  }
+  .cs-cta p { color: var(--text-dim); max-width: 480px; margin: 0 auto 28px; }
+  .cs-cta .cta-row { justify-content: center; }
+</style>

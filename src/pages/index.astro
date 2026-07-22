@@ -47,8 +47,8 @@ const others = projects.filter((p) => !p.featured);
             <div class="label">merchants on FlexSync</div>
           </div>
           <div class="stat">
-            <div class="num gradient-text">3.4M</div>
-            <div class="label">API requests handled</div>
+            <div class="num gradient-text">4M+</div>
+            <div class="label">requests / month</div>
           </div>
           <div class="stat">
             <div class="num gradient-text">60%</div>
@@ -88,11 +88,18 @@ const others = projects.filter((p) => !p.featured);
               <div class="card-stack">
                 {p.stack.map((s) => <span class="tag">{s}</span>)}
               </div>
-              {p.link && (
-                <a class="card-link" href={p.link.url} target="_blank" rel="noopener">
-                  {p.link.label} ↗
-                </a>
-              )}
+              <div class="card-links">
+                {p.caseStudyUrl && (
+                  <a class="card-link" href={p.caseStudyUrl}>
+                    Read the case study →
+                  </a>
+                )}
+                {p.link && (
+                  <a class="card-link muted" href={p.link.url} target="_blank" rel="noopener">
+                    {p.link.label} ↗
+                  </a>
+                )}
+              </div>
             </article>
           ))}
         </div>

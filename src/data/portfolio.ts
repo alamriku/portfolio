@@ -8,6 +8,7 @@ export interface Project {
   year: string;
   featured?: boolean;
   link?: { label: string; url: string };
+  caseStudyUrl?: string;
 }
 
 export interface Testimonial {
@@ -70,8 +71,9 @@ export const projects: Project[] = [
       'A Shopify public app that lets merchants export products, variants, and inventory into Google Sheets, bulk-edit them in a familiar spreadsheet, and sync changes back to Shopify automatically. Built around a serialized bulk-operation queue and webhook-driven updates so two systems never drift out of step.',
     stack: ['Laravel 12', 'React 18', 'TypeScript', 'MySQL', 'Redis', 'Shopify GraphQL', 'Google Sheets API', 'Apps Script'],
     highlights: [
+      'Solo-built end to end — architecture, backend, frontend, shipping',
       'Serves 400+ merchants in production',
-      'Scaled to handle 3.4M API requests via queue + MySQL index optimization',
+      'Handles 4M+ requests a month via a serialized queue + MySQL index optimization',
       'Cut sync latency 60% with buffered webhook processing',
       'Formula sync — spreadsheet price/stock formulas push straight back to Shopify',
     ],
@@ -79,6 +81,7 @@ export const projects: Project[] = [
     year: '2023 — Present',
     featured: true,
     link: { label: 'Shopify App Store', url: 'https://apps.shopify.com/' },
+    caseStudyUrl: '/flexsync',
   },
   {
     name: 'Hoodsly Connector',

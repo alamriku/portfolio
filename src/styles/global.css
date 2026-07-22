@@ -293,8 +293,14 @@ h2.section-title {
   border: 1px solid var(--border);
   color: var(--text-faint);
 }
+.card-links {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  align-items: center;
+}
 .card-link {
-  margin-top: 14px;
   font-family: var(--mono);
   font-size: 13px;
   color: var(--accent);
@@ -302,7 +308,9 @@ h2.section-title {
   gap: 6px;
   align-items: center;
 }
+.card-link.muted { color: var(--text-faint); }
 .card-link:hover { text-decoration: underline; }
+.card-link.muted:hover { color: var(--accent); }
 
 /* ---------- Proof / Testimonials ---------- */
 .proof {
