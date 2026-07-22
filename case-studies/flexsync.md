@@ -6,7 +6,8 @@ Work at a Startup, Lemon.io, Toptal, LinkedIn, or a résumé. Facts here match t
 
 **Ground-truth facts (don't drift from these):**
 - Solo-built end to end (architecture, Laravel backend, React frontend, shipping).
-- Public app, published on the Shopify App Store, with 5★ reviews. *(Not claiming "Built for Shopify" certification — only claim that if/when the badge is granted.)*
+- Public app, published on the Shopify App Store (listing: "Flex Stock Sync"), with 5★ reviews. *(Not claiming "Built for Shopify" certification — only claim that if/when the badge is granted.)*
+- App Store listing: https://apps.shopify.com/flex-stock-sync
 - 400+ merchants in production.
 - ~4M requests a month handled (webhooks + user traffic).
 - 60% sync-latency reduction via buffered webhook processing.

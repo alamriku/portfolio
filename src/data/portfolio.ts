@@ -80,7 +80,7 @@ export const projects: Project[] = [
     role: 'Software Engineer · WPPOOL',
     year: '2023 — Present',
     featured: true,
-    link: { label: 'Shopify App Store', url: 'https://apps.shopify.com/' },
+    link: { label: 'Shopify App Store', url: 'https://apps.shopify.com/flex-stock-sync' },
     caseStudyUrl: '/flexsync',
   },
   {

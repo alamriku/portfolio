@@ -47,7 +47,7 @@ const stack = [
         <div class="cs-meta">
           <div><span class="k">Role</span><span class="v">Sole engineer · WPPOOL</span></div>
           <div><span class="k">Timeline</span><span class="v">2023 — present</span></div>
-          <div><span class="k">Surface</span><span class="v">Published on the Shopify App Store</span></div>
+          <div><span class="k">Surface</span><span class="v"><a class="v-link" href="https://apps.shopify.com/flex-stock-sync" target="_blank" rel="noopener">Live on the Shopify App Store ↗</a></span></div>
           <div><span class="k">Ownership</span><span class="v">Architecture → backend → frontend → ship</span></div>
         </div>
 
@@ -201,6 +201,7 @@ const stack = [
         <p>Happy to whiteboard the queue design, the webhook buffering, or the drift-prevention model.</p>
         <div class="cta-row">
           <a class="btn btn-primary" href={`mailto:${profile.email}`}>Get in touch</a>
+          <a class="btn btn-ghost" href="https://apps.shopify.com/flex-stock-sync" target="_blank" rel="noopener">View on the App Store ↗</a>
           <a class="btn btn-ghost" href="/#work">← Back to work</a>
         </div>
       </section>
@@ -268,6 +269,8 @@ const stack = [
     color: var(--text-faint);
   }
   .cs-meta .v { font-size: 14.5px; color: var(--text); }
+  .cs-meta .v-link { color: var(--accent); }
+  .cs-meta .v-link:hover { text-decoration: underline; }
 
   .cs-stats {
     display: flex;
