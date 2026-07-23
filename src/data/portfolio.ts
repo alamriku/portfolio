@@ -7,6 +7,7 @@ export interface Project {
   role: string;
   year: string;
   featured?: boolean;
+  image?: string;
   link?: { label: string; url: string };
   caseStudyUrl?: string;
 }
@@ -44,6 +45,7 @@ export const profile = {
   years: '4+',
   location: 'Chittagong, Bangladesh',
   email: 'kazi.badrul.alam96@gmail.com',
+  portrait: '/me/portrait.webp',
   about: [
     'Software Engineer at WPPOOL with 4+ years shipping production systems across e-commerce, sync tooling, and browser extensions. Self-taught from a non-CS background — I learn by building.',
     'My work lives at the seams between platforms: Shopify ↔ Google Sheets, browsers ↔ cloud storage, marketplaces ↔ dropshipping backends. I care about queue architecture, API rate limits, and shaving latency off the hot path.',
@@ -66,6 +68,7 @@ export const profile = {
 export const projects: Project[] = [
   {
     name: 'FlexSync',
+    image: '/work/flexsync.svg',
     tagline: 'Bidirectional real-time sync between Shopify and Google Sheets.',
     description:
       'A Shopify public app that lets merchants export products, variants, and inventory into Google Sheets, bulk-edit them in a familiar spreadsheet, and sync changes back to Shopify automatically. Built around a serialized bulk-operation queue and webhook-driven updates so two systems never drift out of step.',
@@ -85,6 +88,7 @@ export const projects: Project[] = [
   },
   {
     name: 'Hoodsly Connector',
+    image: '/work/hoodsly.svg',
     tagline: 'Custom Shopify app that breaks the 3-option product limit.',
     description:
       'A custom Shopify app enabling 30+ product configuration options — well past Shopify\'s native 3-option cap — with a React theme app extension that renders configurators dynamically on the storefront.',
@@ -101,6 +105,7 @@ export const projects: Project[] = [
   },
   {
     name: 'Clippy',
+    image: '/work/clippy.svg',
     tagline: 'Screen-recorder Chrome extension with a Cloudflare Stream backend.',
     description:
       'An end-to-end screen recording Chrome extension: capture, store, and share videos. Backed by a FilamentPHP admin and Cloudflare Stream/Workers for video storage and delivery.',
@@ -116,6 +121,7 @@ export const projects: Project[] = [
   },
   {
     name: 'Slack Follow-up Task Bot',
+    image: '/work/slackbot.svg',
     tagline: 'Cuts down repetitive standup pings by auto-assigning tasks.',
     description:
       'A Slack bot that reduces the volume of manual status pings on a team by automatically assigning and tracking follow-up tasks.',
@@ -126,6 +132,7 @@ export const projects: Project[] = [
   },
   {
     name: 'MoveUp',
+    image: '/work/moveup.svg',
     tagline: 'Published Shopify app + Chrome extension for dropshipping.',
     description:
       'A published Shopify app for dropshipping through WooCommerce and Shopify. Set up the full Shopify app config and wired Shopify webhook events through an Amazon EventBridge + Lambda pipeline. Paired with a companion Chrome extension.',
@@ -140,6 +147,7 @@ export const projects: Project[] = [
   },
   {
     name: 'Ali2BD Assistant & Scrapers',
+    image: '/work/ali2bd.svg',
     tagline: 'Order-fulfillment automation and marketplace scraping packages.',
     description:
       'Automated order fulfillment from AliExpress and Amazon into Ali2BD, plus a set of NPM packages that scrape product data from Amazon, AliExpress, 1688, and Taobao. Also built the Ali2BD support panel in React.',
@@ -155,6 +163,7 @@ export const projects: Project[] = [
   },
   {
     name: 'Thumb-Blocker',
+    image: '/work/thumbblocker.svg',
     tagline: 'A Chrome extension that hides YouTube thumbnails.',
     description:
       'A pet-project Chrome extension that strips thumbnails from YouTube to cut clickbait-driven distraction.',

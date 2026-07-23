@@ -14,3 +14,9 @@ pnpm-debug.log*
 .env.production
 # macOS
 .DS_Store
+
+# source reference docs & raw photo (not for the repo)
+Design Portfolio Handbook - FLUX.pdf
+Kazi_Badrul_Alam_SWE.pdf
+psychologycheatsheet.pdf
+WhatsApp Image 2026-04-20 at 21.39.10 copy.jpeg

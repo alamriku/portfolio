@@ -8,7 +8,7 @@ const others = projects.filter((p) => !p.featured);
 
 <Layout>
   <nav class="nav">
-    <div class="wrap">
+    <div class="nav-bar">
       <a href="#top" class="logo">kazi<span class="dot">.</span>badrul</a>
       <div class="nav-links">
         <a href="#work">work</a>
@@ -16,50 +16,99 @@ const others = projects.filter((p) => !p.featured);
         <a href="#about">about</a>
         <a href="#experience">experience</a>
         <a href="#writing">writing</a>
-        <a href="#contact">contact</a>
       </div>
+      <a class="nav-cta" href={`mailto:${profile.email}`}>Let's talk →</a>
     </div>
   </nav>
 
   <main id="top">
     <!-- HERO -->
     <header class="hero">
+      <div class="hero-glow" aria-hidden="true"></div>
       <div class="wrap">
-        <div class="status">
-          <span class="pulse"></span> Available for interesting problems
-        </div>
-        <h1>
-          I build the <span class="gradient-text">seams</span><br />
-          between platforms.
-        </h1>
-        <p class="lede">
-          {profile.title} in {profile.location}, {profile.years} years in.
-          <strong>{profile.tagline}</strong>
-        </p>
-        <div class="cta-row">
-          <a class="btn btn-primary" href="#work">View work →</a>
-          <a class="btn btn-ghost" href={`mailto:${profile.email}`}>Get in touch</a>
+        <div class="hero-copy">
+          <span class="hero-badge" data-reveal style="--d:0ms"><span class="pulse"></span> Available for freelance &amp; full-time</span>
+          <h1 data-reveal style="--d:80ms">
+            I build software
+            <span class="accent-text">end&#8288;-&#8288;to&#8288;-&#8288;end.</span>
+          </h1>
+          <p class="lede" data-reveal style="--d:180ms">
+            Software Engineer — backend, frontend &amp; mobile.
+          </p>
+          <div class="cta-row" data-reveal style="--d:260ms">
+            <a class="btn btn-primary" href="#work">View work →</a>
+            <a class="btn btn-ghost" href={`mailto:${profile.email}`}>Get in touch</a>
+          </div>
+          <div class="hero-metrics" data-reveal style="--d:340ms">
+            <span><b>400+</b> merchants served</span>
+            <span class="sep">/</span>
+            <span><b>4M+</b> requests / month</span>
+            <span class="sep">/</span>
+            <span><b>{profile.years}</b> years shipping</span>
+          </div>
         </div>
 
-        <div class="stat-row">
-          <div class="stat">
-            <div class="num gradient-text">400+</div>
-            <div class="label">merchants on FlexSync</div>
-          </div>
-          <div class="stat">
-            <div class="num gradient-text">4M+</div>
-            <div class="label">requests / month</div>
-          </div>
-          <div class="stat">
-            <div class="num gradient-text">60%</div>
-            <div class="label">sync latency cut</div>
-          </div>
-          <div class="stat">
-            <div class="num gradient-text">{profile.years}</div>
-            <div class="label">years shipping</div>
-          </div>
-        </div>
+        <figure class="hero-portrait" data-reveal style="--d:220ms">
+          <img src={profile.portrait} alt={`Portrait of ${profile.name}`} width="1050" height="1400" />
+        </figure>
       </div>
+
+      <script is:inline>
+        (() => {
+          const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+          if (reduce) return;
+          const hero = document.querySelector('.hero');
+          const copy = document.querySelector('.hero-copy');
+          const portrait = document.querySelector('.hero-portrait');
+          const glow = document.querySelector('.hero-glow');
+          if (!hero) return;
+
+          // eased (lerped) targets → motion trails the scroll/pointer for a silky feel
+          const s = { pY: 0, gY: 0, cY: 0, cO: 1, pX: 0, gX: 0 };
+          const t = { pY: 0, gY: 0, cY: 0, cO: 1, pX: 0, gX: 0 };
+          const lerp = (a, b, f) => a + (b - a) * f;
+
+          const onScroll = () => {
+            const y = window.scrollY, vh = innerHeight || 1;
+            t.pY = y * 0.16;
+            t.gY = y * 0.30;
+            t.cY = y * -0.05;
+            t.cO = Math.max(0, 1 - y / (vh * 0.9));
+          };
+          const onMove = (e) => {
+            const nx = (e.clientX / (innerWidth || 1) - 0.5) * 2;
+            t.pX = nx * 12;   // portrait drifts gently with the cursor
+            t.gX = nx * 26;   // glow drifts more (further "back")
+          };
+          const onLeave = () => { t.pX = 0; t.gX = 0; };
+
+          let raf = 0;
+          const tick = () => {
+            s.pY = lerp(s.pY, t.pY, 0.085);
+            s.gY = lerp(s.gY, t.gY, 0.06);
+            s.cY = lerp(s.cY, t.cY, 0.1);
+            s.cO = lerp(s.cO, t.cO, 0.1);
+            s.pX = lerp(s.pX, t.pX, 0.06);
+            s.gX = lerp(s.gX, t.gX, 0.05);
+            if (portrait) portrait.style.translate = s.pX.toFixed(2) + 'px ' + s.pY.toFixed(2) + 'px';
+            if (glow) glow.style.translate = s.gX.toFixed(2) + 'px ' + s.gY.toFixed(2) + 'px';
+            if (copy) { copy.style.translate = '0 ' + s.cY.toFixed(2) + 'px'; copy.style.opacity = s.cO.toFixed(3); }
+            raf = requestAnimationFrame(tick);
+          };
+
+          // only animate while the hero is on screen (saves CPU otherwise)
+          const io = new IntersectionObserver(([e]) => {
+            if (e.isIntersecting) { if (!raf) raf = requestAnimationFrame(tick); }
+            else if (raf) { cancelAnimationFrame(raf); raf = 0; }
+          }, { threshold: 0 });
+          io.observe(hero);
+
+          addEventListener('scroll', onScroll, { passive: true });
+          addEventListener('pointermove', onMove, { passive: true });
+          addEventListener('pointerleave', onLeave, { passive: true });
+          onScroll();
+        })();
+      </script>
     </header>
 
     <!-- WORK -->
@@ -75,6 +124,11 @@ const others = projects.filter((p) => !p.featured);
         <div class="projects-grid featured-grid">
           {featured.map((p, i) => (
             <article class={`card${i === 0 ? ' big' : ''}`}>
+              {p.image && (
+                <div class="card-thumb">
+                  <img src={p.image} alt={`${p.name} preview`} loading="lazy" width="1200" height="675" />
+                </div>
+              )}
               <div class="card-head">
                 <h3>{p.name}</h3>
                 <span class="year">{p.year}</span>
@@ -107,6 +161,11 @@ const others = projects.filter((p) => !p.featured);
         <div class="projects-grid featured-grid" style="margin-top:20px;">
           {others.map((p) => (
             <article class="card">
+              {p.image && (
+                <div class="card-thumb">
+                  <img src={p.image} alt={`${p.name} preview`} loading="lazy" width="1200" height="675" />
+                </div>
+              )}
               <div class="card-head">
                 <h3>{p.name}</h3>
                 <span class="year">{p.year}</span>
@@ -197,6 +256,9 @@ const others = projects.filter((p) => !p.featured);
         <h2 class="section-title">Self-taught, build-first</h2>
         <div class="about-grid">
           <div>
+            <figure class="about-photo">
+              <img src={profile.portrait} alt={`Portrait of ${profile.name}`} loading="lazy" width="800" height="800" />
+            </figure>
             {profile.about.map((para) => <p>{para}</p>)}
           </div>
           <div class="skills-block">
