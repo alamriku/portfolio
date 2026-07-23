@@ -79,15 +79,21 @@ a { color: inherit; text-decoration: none; }
   height: 60px;
   padding: 0 10px 0 22px;
   border-radius: 999px;
-  border: 1px solid var(--border);
-  background: rgba(12, 14, 20, 0.62);
-  backdrop-filter: blur(14px) saturate(140%);
-  box-shadow: 0 12px 40px -18px rgba(0, 0, 0, 0.8);
+  /* glassmorphism — light, neutral frosted glass so content shows through */
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05));
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  backdrop-filter: blur(18px) saturate(150%);
+  box-shadow:
+    0 12px 40px -14px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 .nav .logo {
   font-family: var(--mono);
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-weight: 700;
+  font-size: 21px;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
   white-space: nowrap;
 }
 .nav .logo .dot { color: var(--accent); }
@@ -98,10 +104,12 @@ a { color: inherit; text-decoration: none; }
 }
 .nav-links a {
   position: relative;
-  font-size: 14px;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
   color: var(--text-dim);
   transition: color 0.15s;
-  font-family: var(--mono);
 }
 .nav-links a::after {
   content: "";
@@ -236,7 +244,7 @@ h2.section-title {
 .hero h1 .accent-text {
   color: var(--accent-soft);
   white-space: nowrap;
-  text-shadow: 0 0 44px rgba(124, 108, 255, 0.55);
+  text-shadow: 0 0 22px rgba(124, 108, 255, 0.28);
 }
 
 /* L3 — lede (single body tone) */
@@ -254,8 +262,8 @@ h2.section-title {
 .hero-portrait {
   position: relative;
   z-index: 1;
-  width: min(440px, 80%);
-  margin: -28px auto 0;           /* tuck up so it sits subtly behind the copy */
+  width: min(500px, 84%);
+  margin: -20px auto 0;           /* tuck up so it sits subtly behind the copy */
 }
 /* soft violet aura behind the cut-out subject so it fits the hero */
 .hero-portrait::before {
@@ -278,6 +286,71 @@ h2.section-title {
   /* only fade the bottom so the subject dissolves into the page */
   -webkit-mask-image: linear-gradient(to bottom, #000 84%, transparent 100%);
   mask-image: linear-gradient(to bottom, #000 84%, transparent 100%);
+}
+
+/* --- Floating tech-stack constellation --- */
+.hero-web {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+.hero-web polyline {
+  fill: none;
+  stroke: rgba(124, 108, 255, 0.28);
+  stroke-width: 1;
+  stroke-dasharray: 1 6;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+.hero-orbits {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.orbit {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--s);
+  height: var(--s);
+  margin: calc(var(--s) / -2);
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+  opacity: 0.9;
+  animation: floatY var(--dur, 7s) ease-in-out var(--delay, 0s) infinite;
+}
+.orbit::before {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  z-index: -1;
+  background: radial-gradient(closest-side, rgba(124, 108, 255, 0.18), transparent 70%);
+}
+.orbit img {
+  width: 62%;
+  height: 62%;
+  object-fit: contain;
+  display: block;
+}
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .orbit { animation: none; }
+}
+/* icons only fit in the gutters on wide screens */
+@media (max-width: 1180px) {
+  .hero-orbits, .hero-web { display: none; }
 }
 
 /* --- Hero entrance reveal (transform stays free for scroll parallax via `translate`) --- */

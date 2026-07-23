@@ -4,6 +4,21 @@ import { profile, projects, experience, proof, testimonials, writing, articles }
 
 const featured = projects.filter((p) => p.featured);
 const others = projects.filter((p) => !p.featured);
+
+// Floating tech-stack constellation for the hero gutters.
+// x/y = % position, s = size px, d = parallax depth, dur/delay = idle float timing.
+const orbits = [
+  { icon: 'shopify',     x: 7,  y: 23, s: 46, d: 0.30, dur: 7.0, delay: 0.0 },
+  { icon: 'react',       x: 15, y: 40, s: 40, d: 0.56, dur: 8.0, delay: 1.2 },
+  { icon: 'docker',      x: 6,  y: 57, s: 44, d: 0.40, dur: 6.5, delay: 0.6 },
+  { icon: 'postgresql',  x: 16, y: 73, s: 38, d: 0.64, dur: 7.5, delay: 1.8 },
+  { icon: 'php',         x: 9,  y: 88, s: 42, d: 0.48, dur: 6.0, delay: 0.3 },
+  { icon: 'nodejs',      x: 92, y: 22, s: 46, d: 0.32, dur: 7.2, delay: 0.9 },
+  { icon: 'aws',         x: 84, y: 40, s: 52, d: 0.58, dur: 8.0, delay: 0.4 },
+  { icon: 'mysql',       x: 93, y: 57, s: 42, d: 0.42, dur: 6.5, delay: 1.5 },
+  { icon: 'digitalocean',x: 85, y: 73, s: 40, d: 0.62, dur: 7.5, delay: 0.7 },
+  { icon: 'css',         x: 91, y: 88, s: 40, d: 0.50, dur: 6.0, delay: 1.1 },
+];
 ---
 
 <Layout>
@@ -11,11 +26,11 @@ const others = projects.filter((p) => !p.featured);
     <div class="nav-bar">
       <a href="#top" class="logo">kazi<span class="dot">.</span>badrul</a>
       <div class="nav-links">
-        <a href="#work">work</a>
-        <a href="#proof">proof</a>
-        <a href="#about">about</a>
-        <a href="#experience">experience</a>
-        <a href="#writing">writing</a>
+        <a href="#work">Work</a>
+        <a href="#proof">Proof</a>
+        <a href="#about">About</a>
+        <a href="#experience">Experience</a>
+        <a href="#writing">Writing</a>
       </div>
       <a class="nav-cta" href={`mailto:${profile.email}`}>Let's talk →</a>
     </div>
@@ -25,6 +40,24 @@ const others = projects.filter((p) => !p.featured);
     <!-- HERO -->
     <header class="hero">
       <div class="hero-glow" aria-hidden="true"></div>
+
+      <!-- floating tech-stack constellation -->
+      <svg class="hero-web" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <polyline points="7,23 15,40 6,57 16,73 9,88" />
+        <polyline points="92,22 84,40 93,57 85,73 91,88" />
+      </svg>
+      <div class="hero-orbits" aria-hidden="true">
+        {orbits.map((o) => (
+          <span
+            class="orbit"
+            data-depth={o.d}
+            style={`--x:${o.x}%;--y:${o.y}%;--s:${o.s}px;--dur:${o.dur}s;--delay:${o.delay}s`}
+          >
+            <img src={`/tech/${o.icon}.svg`} alt="" loading="lazy" />
+          </span>
+        ))}
+      </div>
+
       <div class="wrap">
         <div class="hero-copy">
           <span class="hero-badge" data-reveal style="--d:0ms"><span class="pulse"></span> Available for freelance &amp; full-time</span>
@@ -49,7 +82,7 @@ const others = projects.filter((p) => !p.featured);
         </div>
 
         <figure class="hero-portrait" data-reveal style="--d:220ms">
-          <img src={profile.portrait} alt={`Portrait of ${profile.name}`} width="1050" height="1400" />
+          <img src={profile.portrait} alt={`Portrait of ${profile.name}`} width="900" height="748" />
         </figure>
       </div>
 
@@ -61,26 +94,29 @@ const others = projects.filter((p) => !p.featured);
           const copy = document.querySelector('.hero-copy');
           const portrait = document.querySelector('.hero-portrait');
           const glow = document.querySelector('.hero-glow');
+          const web = document.querySelector('.hero-web');
           if (!hero) return;
 
-          // eased (lerped) targets → motion trails the scroll/pointer for a silky feel
-          const s = { pY: 0, gY: 0, cY: 0, cO: 1, pX: 0, gX: 0 };
-          const t = { pY: 0, gY: 0, cY: 0, cO: 1, pX: 0, gX: 0 };
+          // floating icons: each drifts at its own depth
+          const orbits = [...document.querySelectorAll('.orbit')].map((el) => ({
+            el, depth: parseFloat(el.dataset.depth) || 0.4, cur: 0,
+          }));
+
+          // eased (lerped) scroll targets → motion trails the scroll for a silky feel
+          const s = { pY: 0, gY: 0, cY: 0, cO: 1, wY: 0 };
+          const t = { pY: 0, gY: 0, cY: 0, cO: 1, wY: 0 };
+          let sy = 0;
           const lerp = (a, b, f) => a + (b - a) * f;
 
           const onScroll = () => {
-            const y = window.scrollY, vh = innerHeight || 1;
-            t.pY = y * 0.16;
-            t.gY = y * 0.30;
-            t.cY = y * -0.05;
-            t.cO = Math.max(0, 1 - y / (vh * 0.9));
+            sy = window.scrollY;
+            const vh = innerHeight || 1;
+            t.pY = sy * 0.16;
+            t.gY = sy * 0.30;
+            t.cY = sy * -0.05;
+            t.wY = sy * 0.45;
+            t.cO = Math.max(0, 1 - sy / (vh * 0.9));
           };
-          const onMove = (e) => {
-            const nx = (e.clientX / (innerWidth || 1) - 0.5) * 2;
-            t.pX = nx * 12;   // portrait drifts gently with the cursor
-            t.gX = nx * 26;   // glow drifts more (further "back")
-          };
-          const onLeave = () => { t.pX = 0; t.gX = 0; };
 
           let raf = 0;
           const tick = () => {
@@ -88,11 +124,15 @@ const others = projects.filter((p) => !p.featured);
             s.gY = lerp(s.gY, t.gY, 0.06);
             s.cY = lerp(s.cY, t.cY, 0.1);
             s.cO = lerp(s.cO, t.cO, 0.1);
-            s.pX = lerp(s.pX, t.pX, 0.06);
-            s.gX = lerp(s.gX, t.gX, 0.05);
-            if (portrait) portrait.style.translate = s.pX.toFixed(2) + 'px ' + s.pY.toFixed(2) + 'px';
-            if (glow) glow.style.translate = s.gX.toFixed(2) + 'px ' + s.gY.toFixed(2) + 'px';
+            s.wY = lerp(s.wY, t.wY, 0.07);
+            if (portrait) portrait.style.translate = '0 ' + s.pY.toFixed(2) + 'px';
+            if (glow) glow.style.translate = '0 ' + s.gY.toFixed(2) + 'px';
+            if (web) web.style.translate = '0 ' + s.wY.toFixed(2) + 'px';
             if (copy) { copy.style.translate = '0 ' + s.cY.toFixed(2) + 'px'; copy.style.opacity = s.cO.toFixed(3); }
+            for (const o of orbits) {
+              o.cur = lerp(o.cur, sy * o.depth, 0.07);
+              o.el.style.translate = '0 ' + o.cur.toFixed(2) + 'px';
+            }
             raf = requestAnimationFrame(tick);
           };
 
@@ -104,8 +144,6 @@ const others = projects.filter((p) => !p.featured);
           io.observe(hero);
 
           addEventListener('scroll', onScroll, { passive: true });
-          addEventListener('pointermove', onMove, { passive: true });
-          addEventListener('pointerleave', onLeave, { passive: true });
           onScroll();
         })();
       </script>
