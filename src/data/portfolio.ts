@@ -52,7 +52,7 @@ export const profile = {
   ],
   socials: [
     { label: 'GitHub', handle: 'alamriku', url: 'https://github.com/alamriku' },
-    { label: 'LinkedIn', handle: 'kazi-badrul', url: 'https://www.linkedin.com/in/kazi-badrul' },
+    { label: 'LinkedIn', handle: 'kazi-badrul', url: 'https://www.linkedin.com/in/kazi-badrul-249209192/' },
     { label: 'Medium', handle: 'alamriku069', url: 'https://medium.com/@alamriku069' },
     { label: 'Dev.to', handle: 'alamriku', url: 'https://dev.to/alamriku' },
   ],

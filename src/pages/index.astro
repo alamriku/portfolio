@@ -60,8 +60,7 @@ const orbits = [
 
       <div class="wrap">
         <div class="hero-copy">
-          <span class="hero-badge" data-reveal style="--d:0ms"><span class="pulse"></span> Available for freelance &amp; full-time</span>
-          <h1 data-reveal style="--d:80ms">
+          <h1 data-reveal style="--d:0ms">
             I build software
             <span class="accent-text">end&#8288;-&#8288;to&#8288;-&#8288;end.</span>
           </h1>
@@ -376,10 +375,13 @@ const orbits = [
         <h2>Let's build something.</h2>
         <p>
           Open to freelance, full-time, and interesting collaborations.
-          Fastest way to reach me is email.
+          Fastest way to reach me is email or WhatsApp.
         </p>
         <div class="socials">
           <a class="social" href={`mailto:${profile.email}`}>✉ {profile.email}</a>
+          <a class="social" href="https://wa.me/8801839697652" target="_blank" rel="noopener">
+            <span class="wa">✆</span> WhatsApp <span class="h">+880 1839 697652</span>
+          </a>
           {profile.socials.map((s) => (
             <a class="social" href={s.url} target="_blank" rel="noopener">
               {s.label} <span class="h">@{s.handle}</span>
